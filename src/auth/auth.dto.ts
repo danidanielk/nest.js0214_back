@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger/dist/decorators';
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
-export class CatRequestDto {
+export class LoginRequestDto {
   @ApiProperty({
     example: 'example@google.com',
     description: 'email',
@@ -19,13 +19,4 @@ export class CatRequestDto {
   @IsString()
   @IsNotEmpty()
   password: string;
-
-  @ApiProperty({
-    example: '다니엘',
-    description: 'name',
-    required: true,
-  })
-  @IsString()
-  @IsNotEmpty()
-  name: string;
 }
