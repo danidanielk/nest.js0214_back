@@ -6,6 +6,10 @@ import { AppService } from './app.service';
 import { CatsModule } from './cats/cats.module';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { AuthModule } from './auth/auth.module';
+import { CommentsModule } from './comments/comments.module';
+import { CommentsNoSpecController } from './comments--no-spec/comments--no-spec.controller';
+import { CommentsNoSpecService } from './comments--no-spec/comments--no-spec.service';
+import { MommentsController } from './momments/momments.controller';
 
 @Module({
   imports: [
@@ -13,9 +17,10 @@ import { AuthModule } from './auth/auth.module';
     CatsModule,
     MongooseModule.forRoot(process.env.MONGODB_URI),
     AuthModule,
+    CommentsModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, CommentsNoSpecController, MommentsController],
+  providers: [AppService, CommentsNoSpecService],
 })
 //미들웨어는 이곳에섯 연결시켜준 뒤
 //LoggerMiddleware << 이것을 의존성주입해서 사용한다.

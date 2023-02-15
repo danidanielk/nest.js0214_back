@@ -1,6 +1,7 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import mongoose, { Model, Types } from 'mongoose';
+import { CommentsSchema } from 'src/comments/comments.schema';
 import { CatRequestDto } from './cats.dto';
 import { Cat } from './cats.schema';
 
@@ -32,9 +33,11 @@ export class CatsRepository {
     return cat;
   }
 
-  async findCatByIdWithoutPassword(email: string): Promise<Cat | null> {
+  async findCatByIdWithoutPassword(
+    id: string | Types.ObjectId,
+  ): Promise<Cat | null> {
     // const cat = await this.catModel.findById(email).select('-password');
-    const cat = await this.catModel.findOne({ email }).select('-password');
+    const cat = await this.catModel.findOne({ id }).select('-password');
     if (!cat) {
       throw new HttpException('없어요', 400);
     }
@@ -46,5 +49,13 @@ export class CatsRepository {
     cat.imgUrl = `http://localhost:3000/media/${fileName}`;
     const newCat = await cat.save();
     return newCat.readOnlyData;
+  }
+  async findAll() {
+    const CommentsModel = mongoose.model('comments', CommentsSchema);
+
+    const result = await this.catModel
+      .find()
+      .populate('comments', CommentsModel);
+    return result;
   }
 }

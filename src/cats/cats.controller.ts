@@ -3,7 +3,6 @@ import {
   Controller,
   Get,
   Post,
-  Req,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -15,7 +14,6 @@ import { CatRequestDto } from './cats.dto';
 import { CatsService } from './cats.service';
 import { AuthGuard } from '@nestjs/passport';
 import { TokenUser } from 'src/common/decorator/user.decorator';
-import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadedFiles } from '@nestjs/common/decorators';
 import { FilesInterceptor } from '@nestjs/platform-express/multer';
 import { multerOptions } from 'src/common/utils/multer.options';
@@ -67,14 +65,13 @@ export class CatsController {
     @UploadedFiles() files: Array<Express.Multer.File>,
     @TokenUser() cat,
   ) {
-    const id = cat.id;
     const findbyid = await this.catModel.findById(cat.id);
-    // const find = await this.catModel.find(cat.id);
-    // const findone = await this.catModel.findOne({ id });
     console.log('findbyid = ', findbyid);
-    // console.log('find = ', find);
-    // console.log(findone);
+  }
 
-    // console.log(findone.imgUrl);
+  @ApiOperation({ summary: '모든 고양이 가져오기' })
+  @Get('all')
+  getAllCat() {
+    return this.catsService.getAllCat();
   }
 }

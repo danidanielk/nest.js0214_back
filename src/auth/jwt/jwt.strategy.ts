@@ -14,8 +14,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
   async validate(payload) {
     // console.log(payload);
-    const { email, sub } = payload;
-    const cat = await this.catRepository.findCatByIdWithoutPassword(email);
+    const { id } = payload;
+    const cat = await this.catRepository.findCatByIdWithoutPassword(id);
     if (cat) {
       return cat;
     } else {

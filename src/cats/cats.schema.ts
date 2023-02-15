@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail } from 'class-validator';
 import { IsNotEmpty, IsString } from 'class-validator';
 import { Document, SchemaOptions } from 'mongoose';
@@ -9,16 +10,31 @@ const options: SchemaOptions = {
 
 @Schema(options)
 export class Cat extends Document {
+  @ApiProperty({
+    example: 'example@google.com',
+    description: 'email',
+    required: true,
+  })
   @IsEmail()
   @IsNotEmpty()
   @Prop({ required: true, unique: true })
   email: string;
 
+  @ApiProperty({
+    example: '아무개',
+    description: 'name',
+    required: true,
+  })
   @IsEmail()
   @IsNotEmpty()
   @Prop({ required: true })
   name: string;
 
+  @ApiProperty({
+    example: '12345',
+    description: 'password',
+    required: true,
+  })
   @IsEmail()
   @IsNotEmpty()
   @Prop({ required: true })
@@ -39,9 +55,9 @@ export class Cat extends Document {
   };
 }
 
-export const CatSchema = SchemaFactory.createForClass(Cat);
+const _CatSchema = SchemaFactory.createForClass(Cat);
 
-CatSchema.virtual('readOnlyData').get(function (this: Cat) {
+_CatSchema.virtual('readOnlyData').get(function (this: Cat) {
   return {
     id: this.id,
     emaile: this.email,
@@ -49,3 +65,13 @@ CatSchema.virtual('readOnlyData').get(function (this: Cat) {
     imgUrL: this.imgUrl,
   };
 });
+
+_CatSchema.virtual('comments', {
+  ref: 'comments',
+  localField: '_id',
+  foreignField: 'info',
+});
+_CatSchema.set('toObject', { virtuals: true });
+_CatSchema.set('toJSON', { virtuals: true });
+
+export const CatSchema = _CatSchema;
